@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cartoon World</title>
+
+    <style>
+        body {
+            text-align: center;
+            background-size: cover;
+            background-image: url("https://wallpapers.com/images/hd/all-cartoon-characters-2560-x-1600-d63k3iytir94nben.jpg");
+            color: white;
+        }
+
+        input,
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px brown;
+            background-color: darksalmon;
+            border: none;
+        }
+
+        .result-box {
+            width: 350px;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            color: black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        img {
+            width: 200px;
+            border-radius: 10px;
+        }
+
+        .dialogue {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>TOON VERSE</h1>
+
+    <input type="text" id="cartoonName" placeholder="Enter your favorite character">
+    <br><br>
+    <button onclick="getCartoon()">Ready to see me</button>
+
+    <center>
+        <div id="result" class="result-box"></div>
+    </center>
+
+    <script>
+        function getCartoon() {
+            const name = document.getElementById("cartoonName").value.trim();
+
+            fetch(`http://localhost:8080/cartoons/name/${name}`)
+
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
+                })
+                .then(list => {
+                    if (list.length === 0) throw new Error();
+
+                    const data = list[0];
+
+                    document.getElementById("result").innerHTML = `
+                <h2>${data.name}</h2>
+                <img src="${data.img}">
+                <p class="dialogue">${data.dialogue}</p>
+                <p><b>Fact:</b> ${data.fact}</p>
+                <p><b>Rating:</b> ⭐ ${data.rating}</p>
+            `;
+                })
+                .catch(() => {
+                    document.getElementById("result").innerHTML =
+                    "<p>❌ Cartoon not found</p>";
+                });
+        }
+    </script>
+
+</body>
+
+</html>
